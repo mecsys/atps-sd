@@ -179,7 +179,7 @@ def main():
             turn = server.whoGoesFirst()
             print('The ' + turn + ' will go first.')
 #            gameIsPlaying = True
-#        
+        
 #            while gameIsPlaying:
 #                if turn == 'player':
 #                    # Player's turn.
