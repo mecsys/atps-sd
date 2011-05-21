@@ -8,6 +8,11 @@
 # Created:     15/11/2010
 # Copyright:   (c) Isaac Mechi
 # Licence:     <GPL>
+# Passo 3 (Equipe)
+# Desenvolva o segundo módulo denominado com Cliente, o qual deve apresentar:
+# a) Processo identificação do outro jogador (Servidor);
+# b) Processo de quando o jogador pode realizar sua jogada. Vale lembrar que esse
+# processo é alternado, ou seja, um jogador de cada vez.
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 # -*- encoding: utf8 -*-
