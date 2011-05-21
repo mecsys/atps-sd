@@ -101,9 +101,9 @@ class Tictactoe (object):
                 return self.board
 
         def setPlayersLetter(self, letter):
-                "
+                """
                 O jogador escolha com qual letra jogar.
-                "
+                """
                 # Let's the player type which letter they want to be.
                 # Returns a list with the player's letter as the first item, and the computer's letter as the second.
 
@@ -222,11 +222,12 @@ def isBoardFull(board):
     return Truea
 
 def createBoard(self):
-        return theBoard = [' '] * 10
+        theBoard = [' '] * 10
+        return theBoard 
 
 def setPlayerLetter(self, playerLetter, computerLetter):
-        global playerLetter = self.playerLetter
-        global computerLetter = self.computerLetter
+        playerLetter = self.playerLetter
+        computerLetter = self.computerLetter
 
 def start(addr="localhost",port=5001):
 	#Cria um servidor XML-RPC no endereço e port definido.
@@ -237,10 +238,10 @@ def start(addr="localhost",port=5001):
 	server.register_multicall_functions()
 	#Regista um objecto Session, o mapeamento dos métodos é automático
 	server.register_instance(Session())
+	server.register_instance(Tictactoe())
 	#Regista a funcão currentTime no servidor com o nome time
 	server.register_function(currentTime,"time")
 	#Regista a funcão drawBoard no servidor com o nome draw
-	server.register_function(drawBoard,"draw")
 	#Inicia o servidor XML-RCP em loop infinito
 	server.serve_forever()
 

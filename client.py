@@ -172,8 +172,9 @@ def main():
         
         while True:
             # Reset the board
-            theBoard = server.createBoard()
-            playerLetter, computerLetter = setPlayersLetter()
+            #theBoard = server.createBoard()
+	    print server.system.listMethods()
+            playerLetter, computerLetter = inputPlayerLetter()
             server.setPlayersLetter(playerLetter, computerLetter)
             turn = server.whoGoesFirst()
             print('The ' + turn + ' will go first.')
