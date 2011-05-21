@@ -90,7 +90,7 @@ class Tictactoe (object):
                 self.computer = " "
                 self.turn = " "
 
-        def drawBoard(self.board):             
+        def drawBoard(self, board):             
                 """
                 Retarna o tabuleiro para o cliente mostrar 
                 na tela.
