@@ -72,54 +72,43 @@ def currentTime():
 	"""
 	return strftime("%Y-%m-%d %H:%M:%S")
 
-def drawBoard(board):
-    # This function prints out the board that it was passed.
-
-    # "board" is a list of 10 strings representing the board (ignore index 0)
-    print('   |   |')
-    print(' ' + board[7] + ' | ' + board[8] + ' | ' + board[9])
-    print('   |   |')
-    print('-----------')
-    print('   |   |')
-    print(' ' + board[4] + ' | ' + board[5] + ' | ' + board[6])
-    print('   |   |')
-    print('-----------')
-    print('   |   |')
-    print(' ' + board[1] + ' | ' + board[2] + ' | ' + board[3])
-    print('   |   |')
-
-    return ['0'] * 10
-
-def start(addr="localhost",port=5000):
-	#Cria um servidor XML-RPC no endereço e port definido.
-	server = SimpleXMLRPCServer((addr,port))
-	#Permite aos clientes fazer introspecção ao servidor
-	server.register_introspection_functions()
-	#Permite aos clientes fazerem vários pedidos como um só
-	server.register_multicall_functions()
-	#Regista um objecto Session, o mapeamento dos métodos é automático
-	server.register_instance(Session())
-	#Regista a funcão currentTime no servidor com o nome time
-	server.register_function(currentTime,"time")
-	#Regista a funcão drawBoard no servidor com o nome draw
-	server.register_function(drawBoard,"draw")
-	#Inicia o servidor XML-RCP em loop infinito
-	server.serve_forever()
-
-if __name__ == "__main__":
-	start()
-
 # Tic Tac Toe
+class Tictactoe (object):
+	"""
+	Fornece os funcionalidades básicas para o jogo da
+	velha.
+	"""
 
+	def __init__(self):
+		"""
+		Inicia uma lista vazia com 10 posicões que
+                servirá com base de dados para o tabuleiro.
+                Inicia referencia para jogadores.
+		"""
+		self.__theBoard = [' '] * 10
+                self.playerLetter = " "
+                self.computer = " "
 
+        def drawBoard(board):             
+                """
+                Retarna o tabuleiro para o cliente mostrar 
+                na tela.
+                """
+                # This function prints out the board that it was passed.
 
-def inputPlayerLetter():
-    # Let's the player type which letter they want to be.
-    # Returns a list with the player's letter as the first item, and the computer's letter as the second.
-    letter = ''
-    while not (letter == 'X' or letter == 'O'):
-        print('Do you want to be X or O?')
-        letter = input().upper()
+                # "board" is a list of 10 strings representing the board (ignore index 0)
+                return self.board
+
+        def inputPlayerLetter():
+                "
+                O jogador escolha com qual letra jogar.
+                "
+                # Let's the player type which letter they want to be.
+                # Returns a list with the player's letter as the first item, and the computer's letter as the second.
+                letter = ''
+                while not (letter == 'X' or letter == 'O'):
+                    print('Do you want to be X or O?')
+                    letter = input().upper()
 
     # the first element in the tuple is the player's letter, the second is the computer's letter.
     if letter == 'X':
@@ -229,54 +218,80 @@ def isBoardFull(board):
     for i in range(1, 10):
         if isSpaceFree(board, i):
             return False
-    return True
+    return Truea
 
+def createBoard(self):
+        return theBoard = [' '] * 10
 
-print('Welcome to Tic Tac Toe!')
+def setPlayerLetter(self, playerLetter, computerLetter):
+        global playerLetter = self.playerLetter
+        global computerLetter = self.computerLetter
 
-while True:
-    # Reset the board
-    theBoard = [' '] * 10
-    playerLetter, computerLetter = inputPlayerLetter()
-    turn = whoGoesFirst()
-    print('The ' + turn + ' will go first.')
-    gameIsPlaying = True
+def start(addr="localhost",port=5001):
+	#Cria um servidor XML-RPC no endereço e port definido.
+	server = SimpleXMLRPCServer((addr,port))
+	#Permite aos clientes fazer introspecção ao servidor
+	server.register_introspection_functions()
+	#Permite aos clientes fazerem vários pedidos como um só
+	server.register_multicall_functions()
+	#Regista um objecto Session, o mapeamento dos métodos é automático
+	server.register_instance(Session())
+	#Regista a funcão currentTime no servidor com o nome time
+	server.register_function(currentTime,"time")
+	#Regista a funcão drawBoard no servidor com o nome draw
+	server.register_function(drawBoard,"draw")
+	#Inicia o servidor XML-RCP em loop infinito
+	server.serve_forever()
 
-    while gameIsPlaying:
-        if turn == 'player':
-            # Player's turn.
-            drawBoard(theBoard)
-            move = getPlayerMove(theBoard)
-            makeMove(theBoard, playerLetter, move)
+        
+        print('Welcome to Tic Tac Toe!')
 
-            if isWinner(theBoard, playerLetter):
-                drawBoard(theBoard)
-                print('Hooray! You have won the game!')
-                gameIsPlaying = False
-            else:
-                if isBoardFull(theBoard):
+        while True:
+            # Reset the board
+            theBoard = [' '] * 10
+            playerLetter, computerLetter = inputPlayerLetter()
+            turn = whoGoesFirst()
+            print('The ' + turn + ' will go first.')
+            gameIsPlaying = True
+
+            while gameIsPlaying:
+                if turn == 'player':
+                    # Player's turn.
                     drawBoard(theBoard)
-                    print('The game is a tie!')
-                    break
+                    move = getPlayerMove(theBoard)
+                    makeMove(theBoard, playerLetter, move)
+        
+                    if isWinner(theBoard, playerLetter):
+                        drawBoard(theBoard)
+                        print('Hooray! You have won the game!')
+                        gameIsPlaying = False
+                    else:
+                        if isBoardFull(theBoard):
+                            drawBoard(theBoard)
+                            print('The game is a tie!')
+                            break
+                        else:
+                            turn = 'computer'
+        
                 else:
-                    turn = 'computer'
+                    # Computer's turn.
+                    move = getComputerMove(theBoard, computerLetter)
+                    makeMove(theBoard, computerLetter, move)
+        
+                    if isWinner(theBoard, computerLetter):
+                        drawBoard(theBoard)
+                        print('The computer has beaten you! You lose.')
+                        gameIsPlaying = False
+                    else:
+                        if isBoardFull(theBoard):
+                            drawBoard(theBoard)
+                            print('The game is a tie!')
+                            break
+                        else:
+                            turn = 'player'
 
-        else:
-            # Computer's turn.
-            move = getComputerMove(theBoard, computerLetter)
-            makeMove(theBoard, computerLetter, move)
+            if not playAgain():
+                break
 
-            if isWinner(theBoard, computerLetter):
-                drawBoard(theBoard)
-                print('The computer has beaten you! You lose.')
-                gameIsPlaying = False
-            else:
-                if isBoardFull(theBoard):
-                    drawBoard(theBoard)
-                    print('The game is a tie!')
-                    break
-                else:
-                    turn = 'player'
-
-    if not playAgain():
-        break
+if __name__ == "__main__":
+	start()
