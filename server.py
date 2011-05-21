@@ -88,8 +88,9 @@ class Tictactoe (object):
 		self.__theBoard = [' '] * 10
                 self.playerLetter = " "
                 self.computer = " "
+                self.turn = " "
 
-        def drawBoard(board):             
+        def drawBoard(self.board):             
                 """
                 Retarna o tabuleiro para o cliente mostrar 
                 na tela.
@@ -99,29 +100,29 @@ class Tictactoe (object):
                 # "board" is a list of 10 strings representing the board (ignore index 0)
                 return self.board
 
-        def inputPlayerLetter():
+        def setPlayersLetter(self, letter):
                 "
                 O jogador escolha com qual letra jogar.
                 "
                 # Let's the player type which letter they want to be.
                 # Returns a list with the player's letter as the first item, and the computer's letter as the second.
-                letter = ''
-                while not (letter == 'X' or letter == 'O'):
-                    print('Do you want to be X or O?')
-                    letter = input().upper()
 
-    # the first element in the tuple is the player's letter, the second is the computer's letter.
-    if letter == 'X':
-        return ['X', 'O']
-    else:
-        return ['O', 'X']
+                # the first element in the tuple is the player's letter, the second is the computer's letter.
+                if letter == 'X':
+                        self.playerLetter, self.computerLetter = ['X', 'O']
+                        return self.playerLetter, self.computerLetter
+                else:
+                        self.playerLetter, self.computerLetter =  ['O', 'X']
+                        return self.playerLetter, self.computerLetter
 
-def whoGoesFirst():
-    # Randomly choose the player who goes first.
-    if random.randint(0, 1) == 0:
-        return 'computer'
-    else:
-        return 'player'
+        def whoGoesFirst(self):
+                # Randomly choose the player who goes first.
+                if random.randint(0, 1) == 0:
+                        self.turn = 'computer'
+                        return self.turn
+                else:
+                        self.turn = 'player' 
+                        return self.turn
 
 def playAgain():
     # This function returns True if the player wants to play again, otherwise it returns False.

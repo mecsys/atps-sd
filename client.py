@@ -61,12 +61,7 @@ def inputPlayerLetter():
         letter = input().upper()
 
     # the first element in the tuple is the player's letter, the second is the computer's letter.
-    if letter == 'X':
-        return ['X', 'O']
-    else:
-        return ['O', 'X']
-
-    server.inputPlayerLetter(letter)
+    return server.setPlayersLetter(letter)
 
 def whoGoesFirst():
     # Randomly choose the player who goes first.
@@ -178,50 +173,50 @@ def main():
         while True:
             # Reset the board
             theBoard = server.createBoard()
-            playerLetter, computerLetter = inputPlayerLetter()
-            server.setPlayersLetter()
-            turn = whoGoesFirst()
+            playerLetter, computerLetter = setPlayersLetter()
+            server.setPlayersLetter(playerLetter, computerLetter)
+            turn = server.whoGoesFirst()
             print('The ' + turn + ' will go first.')
-            gameIsPlaying = True
-        
-            while gameIsPlaying:
-                if turn == 'player':
-                    # Player's turn.
-                    drawBoard(theBoard)
-                    move = getPlayerMove(theBoard)
-                    makeMove(theBoard, playerLetter, move)
-        
-                    if isWinner(theBoard, playerLetter):
-                        drawBoard(theBoard)
-                        print('Hooray! You have won the game!')
-                        gameIsPlaying = False
-                    else:
-                        if isBoardFull(theBoard):
-                            drawBoard(theBoard)
-                            print('The game is a tie!')
-                            break
-                        else:
-                            turn = 'computer'
-        
-                else:
-                    # Computer's turn.
-                    move = getComputerMove(theBoard, computerLetter)
-                    makeMove(theBoard, computerLetter, move)
-        
-                    if isWinner(theBoard, computerLetter):
-                        drawBoard(theBoard)
-                        print('The computer has beaten you! You lose.')
-                        gameIsPlaying = False
-                    else:
-                        if isBoardFull(theBoard):
-                            drawBoard(theBoard)
-                            print('The game is a tie!')
-                            break
-                        else:
-                            turn = 'player'
-        
-            if not playAgain():
-                break
+#            gameIsPlaying = True
+#        
+#            while gameIsPlaying:
+#                if turn == 'player':
+#                    # Player's turn.
+#                    drawBoard(theBoard)
+#                    move = getPlayerMove(theBoard)
+#                    makeMove(theBoard, playerLetter, move)
+#        
+#                    if isWinner(theBoard, playerLetter):
+#                        drawBoard(theBoard)
+#                        print('Hooray! You have won the game!')
+#                        gameIsPlaying = False
+#                    else:
+#                        if isBoardFull(theBoard):
+#                            drawBoard(theBoard)
+#                            print('The game is a tie!')
+#                            break
+#                        else:
+#                            turn = 'computer'
+#        
+#                else:
+#                    # Computer's turn.
+#                    move = getComputerMove(theBoard, computerLetter)
+#                    makeMove(theBoard, computerLetter, move)
+#        
+#                    if isWinner(theBoard, computerLetter):
+#                        drawBoard(theBoard)
+#                        print('The computer has beaten you! You lose.')
+#                        gameIsPlaying = False
+#                    else:
+#                        if isBoardFull(theBoard):
+#                            drawBoard(theBoard)
+#                            print('The game is a tie!')
+#                            break
+#                        else:
+#                            turn = 'player'
+#        
+#            if not playAgain():
+#                break
 
 if __name__ == "__main__":
         main()
