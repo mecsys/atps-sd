@@ -3,7 +3,7 @@ import xmlrpclib
 from datetime import datetime
 
 #Cria uma ligação ao servidor XML-RCP
-server = xmlrpclib.ServerProxy("http://localhost:5001/")
+server = xmlrpclib.ServerProxy("http://127.0.0.1:5001/")
 
 def pedidoSimples(board):
 	#Pede ao servidor que execute o procedimento time
@@ -18,7 +18,6 @@ def pedidoSimples(board):
 	print server.logout("magician")
 
 def pedidoMultiCall():
-        global theBoard
 	#Gera um pedido MultiCall
 	multirequest = xmlrpclib.MultiCall(server)
 	#Adiciona ao pedido multi call os pedidos pretendidos
@@ -35,11 +34,12 @@ def pedidoMultiCall():
 
 # Tic Tac Toe
 
-def drawBoard(board):
+def drawBoard():
     # This function prints out the board that it was passed.
 
     # "board" is a list of 10 strings representing the board (ignore index 0)
-    board =  server.draw(board)
+    print('Printando o tabuleiro!')
+    board =  server.drawBoard()
     print('   |   |')
     print(' ' + board[7] + ' | ' + board[8] + ' | ' + board[9])
     print('   |   |')
@@ -58,7 +58,7 @@ def inputPlayerLetter():
     letter = ''
     while not (letter == 'X' or letter == 'O'):
         print('Do you want to be X or O?')
-        letter = input().upper()
+        letter = raw_input().upper()
 
     # the first element in the tuple is the player's letter, the second is the computer's letter.
     return server.setPlayersLetter(letter)
@@ -75,8 +75,10 @@ def playAgain():
     print('Do you want to play again? (yes or no)')
     return input().lower().startswith('y')
 
-def makeMove(board, letter, move):
-    board[move] = letter
+def makeMove(letter, move):
+    #board[move] = letter
+    server.makeMove(letter, move)
+    return server.getBoard()
 
 def isWinner(bo, le):
     # Given a board and a player's letter, this function returns True if that player has won.
@@ -108,7 +110,7 @@ def getPlayerMove(board):
     move = ' '
     while move not in '1 2 3 4 5 6 7 8 9'.split() or not isSpaceFree(board, int(move)):
         print('What is your next move? (1-9)')
-        move = input()
+        move = raw_input()
     return int(move)
 
 def chooseRandomMoveFromList(board, movesList):
@@ -172,20 +174,26 @@ def main():
         
         while True:
             # Reset the board
-            #theBoard = server.createBoard()
+	    countc = 0
+	    countu = 0
+	    theBoard = []
 	    print server.system.listMethods()
+	    theBoard = server.getBoard()
             playerLetter, computerLetter = inputPlayerLetter()
-            server.setPlayersLetter(playerLetter, computerLetter)
             turn = server.whoGoesFirst()
             print('The ' + turn + ' will go first.')
-#            gameIsPlaying = True
+            gameIsPlaying = True
         
-#            while gameIsPlaying:
-#                if turn == 'player':
-#                    # Player's turn.
-#                    drawBoard(theBoard)
-#                    move = getPlayerMove(theBoard)
-#                    makeMove(theBoard, playerLetter, move)
+            while gameIsPlaying:
+                if turn == 'player':
+                    # Player's turn.
+		    countu = countu + 1
+    		    print('Entrando em User\'s Turn', countu)
+                    drawBoard()
+	            turn = 'computer'
+                    move = getPlayerMove(theBoard)
+                    theBoard = makeMove(playerLetter, move)
+		    drawBoard()
 #        
 #                    if isWinner(theBoard, playerLetter):
 #                        drawBoard(theBoard)
@@ -199,8 +207,11 @@ def main():
 #                        else:
 #                            turn = 'computer'
 #        
-#                else:
-#                    # Computer's turn.
+                else:
+                   # Computer's turn.
+		   countc = countc + 1
+    		   print('Entrando em Computer\'s Turn', countc)
+		   turn = 'player'
 #                    move = getComputerMove(theBoard, computerLetter)
 #                    makeMove(theBoard, computerLetter, move)
 #        

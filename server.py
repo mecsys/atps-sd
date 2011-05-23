@@ -85,12 +85,12 @@ class Tictactoe (object):
                 servirá com base de dados para o tabuleiro.
                 Inicia referencia para jogadores.
 		"""
-		self.__theBoard = [' '] * 10
+		self.__theBoard = self.createBoard()
                 self.playerLetter = " "
                 self.computer = " "
                 self.turn = " "
 
-        def drawBoard(self, board):             
+        def drawBoard(self):             
                 """
                 Retarna o tabuleiro para o cliente mostrar 
                 na tela.
@@ -98,7 +98,7 @@ class Tictactoe (object):
                 # This function prints out the board that it was passed.
 
                 # "board" is a list of 10 strings representing the board (ignore index 0)
-                return self.board
+                return self.__theBoard
 
         def setPlayersLetter(self, letter):
                 """
@@ -124,13 +124,21 @@ class Tictactoe (object):
                         self.turn = 'player' 
                         return self.turn
 
+	def createBoard(self):
+		self.Board = [' '] * 10
+	        return self.Board 
+
+	def getBoard(self):
+		return self.__theBoard
+
+	def makeMove(self,letter, move):
+		self.__theBoard[move] = letter
+
 def playAgain():
     # This function returns True if the player wants to play again, otherwise it returns False.
     print('Do you want to play again? (yes or no)')
     return input().lower().startswith('y')
 
-def makeMove(board, letter, move):
-    board[move] = letter
 
 def isWinner(bo, le):
     # Given a board and a player's letter, this function returns True if that player has won.
@@ -221,15 +229,8 @@ def isBoardFull(board):
             return False
     return Truea
 
-def createBoard(self):
-        theBoard = [' '] * 10
-        return theBoard 
 
-def setPlayerLetter(self, playerLetter, computerLetter):
-        playerLetter = self.playerLetter
-        computerLetter = self.computerLetter
-
-def start(addr="localhost",port=5001):
+def start(addr="127.0.0.1",port=5001):
 	#Cria um servidor XML-RPC no endereço e port definido.
 	server = SimpleXMLRPCServer((addr,port))
 	#Permite aos clientes fazer introspecção ao servidor
@@ -245,7 +246,7 @@ def start(addr="localhost",port=5001):
 	#Inicia o servidor XML-RCP em loop infinito
 	server.serve_forever()
 
-        
+        # ESTA PARTE DO CODIGO NAO RODA  
         print('Welcome to Tic Tac Toe!')
 
         while True:
