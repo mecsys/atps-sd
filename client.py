@@ -3,7 +3,7 @@ import xmlrpclib
 from datetime import datetime
 
 #Cria uma ligação ao servidor XML-RCP
-server = xmlrpclib.ServerProxy("http://127.0.0.1:5001/")
+server = xmlrpclib.ServerProxy("http://10.1.1.2:5000/")
 
 def pedidoSimples(board):
 	#Pede ao servidor que execute o procedimento time

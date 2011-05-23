@@ -231,7 +231,7 @@ def isBoardFull(board):
     return Truea
 
 
-def start(addr="127.0.0.1",port=5001):
+def start(addr="10.1.1.2",port=5000):
 	#Cria um servidor XML-RPC no endereço e port definido.
 	server = SimpleXMLRPCServer((addr,port))
 	#Permite aos clientes fazer introspecção ao servidor
