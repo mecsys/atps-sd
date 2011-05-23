@@ -8,7 +8,7 @@ tictactoe	- codígo fonte do jogo da velha
 
 Dependencias:
 
-Pythn 3 ou superior.
+Pythn 2.7.
 
 Cada diretorio com o mesmo nome de arquivos de configuracao, aplica
 configuracoes separadas ou exclusivas.
