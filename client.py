@@ -77,7 +77,17 @@ def playAgain():
 
 def makeMove(letter, move):
     #board[move] = letter
-    server.makeMove(letter, move)
+    
+    # Tratamento de erro (Marshalling error).
+    # Ainda nao sei ao certo qual erro esta tratando,
+    # retirado de um exemplo do pydoc 2.7
+    try:
+        server.makeMove(letter, move)
+    except xmlrpclib.Fault, err:
+        print "Uma falha ocorreu"
+        print "Falha erro: %d" % err.faultCode
+        print "Falha string: %s" % err.faultString
+
     return server.getBoard()
 
 def isWinner(bo, le):
