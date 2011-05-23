@@ -89,6 +89,7 @@ class Tictactoe (object):
                 self.playerLetter = " "
                 self.computer = " "
                 self.turn = " "
+                print "Tic Tac Toe - Classe instanciada."
 
         def drawBoard(self):             
                 """
