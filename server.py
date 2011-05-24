@@ -3,66 +3,6 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from time import strftime
 import random
 
-class User (object):
-
-	def __init__(self, username, password):
-		self.__username = username
-		self.__password = password
-		self.__logged = False
-
-	def getUsername(self):
-		return self.__username
-
-	def getPassword(self):
-		return self.__password
-
-	def session(self, state=None):
-		if state != None:
-			self.__logged = state
-		return self.__logged
-
-class Session (object):
-	"""
-	Fornece os funcionalidades básicas para um sistema
-	de controlo de sessão.
-	"""
-
-	def __init__(self):
-		"""
-		Inicia um dicionário vazio que servirá com
-		base de dados.
-		"""
-		self.__db = {}
-
-	def login(self,username, password):
-		"""
-		Altera o estado da sessão para True.
-		Args: username, password
-		Return: True ou False
-		"""
-		user = self.__db[username]
-		if user.getPassword == password:
-			user.session(True)
-		return user.session(True)
-
-	def register(self,username, password):
-		"""
-		Insere um novo user na base de dados.
-		Args: username, password
-		Return: True ou False
-		"""
-		self.__db[username] = User(username, password)
-		return self.__db.has_key(username)
-
-	def logout(self,username):
-		"""
-		Altera o estado da sessão para False.
-		Args: username
-		Return: True ou False
-		"""
-		user = self.__db[username]
-		return not user.session(False)
-
 def currentTime():
 	"""
 	Permite obter a data e hora actual do servidor.
@@ -135,6 +75,9 @@ class Tictactoe (object):
 	def makeMove(self,letter, move):
 		self.__theBoard[move] = letter
 
+	def makeTestMove(self, board, letter, move):
+		board[move] = letter
+
         def isWinner(self, le):
             # Given a board and a player's letter, this function returns True if that player has won.
             # We use bo instead of board and le instead of letter so we don't have to type as much.
@@ -189,12 +132,12 @@ class Tictactoe (object):
         
             return dupeBoard
 
-        def chooseRandomMoveFromList(board, movesList):
+        def chooseRandomMoveFromList(self, board, movesList):
             # Returns a valid move from the passed list on the passed board.
             # Returns None if there is no valid move.
             possibleMoves = []
             for i in movesList:
-                if isSpaceFree(board, i):
+                if self.isSpaceFree(board, i):
                     possibleMoves.append(i)
         
             if len(possibleMoves) != 0:
@@ -202,48 +145,45 @@ class Tictactoe (object):
             else:
                 return None
 
-        def getComputerMove(board, computerLetter):
+        def getComputerMove(self):
             # Given a board and the computer's letter, determine where to move and return that move.
-            if computerLetter == 'X':
-                playerLetter = 'O'
-            else:
-                playerLetter = 'X'
         
             # Here is our algorithm for our Tic Tac Toe AI:
             # First, check if we can win in the next move
+            print("Desntro de ComputerMove()")
             for i in range(1, 10):
                 copy = self.getBoardCopy()
                 if self.isSpaceFree(copy, i):
-                    self.makeMove(computerLetter, i)
-                    if self.isTestWinner(copy, computerLetter):
+                    self.makeTestMove(copy, self.computerLetter, i)
+                    if self.isTestWinner(copy, self.computerLetter):
                         return i
-        
+            print("Apos Teste se Computer ganhou")
+            
             # Check if the player could win on his next move, and block them.
             for i in range(1, 10):
                 copy = self.getBoardCopy()
                 if self.isSpaceFree(copy, i):
-                    self.makeMove(copy, playerLetter, i)
-                    if self.isTestWinner(copy, playerLetter):
+                    self.makeTestMove(copy, self.playerLetter, i)
+                    if self.isTestWinner(copy, self.playerLetter):
                         return i
+            print("Apos Teste se Cliente ganhou")
         
             # Try to take one of the corners, if they are free.
             move = self.chooseRandomMoveFromList(self.__theBoard, [1, 3, 7, 9])
             if move != None:
                 return move
+            print("Apos Teste de Corner")
         
             # Try to take the center, if it is free.
-            if self.isSpaceFree(board, 5):
+            if self.isSpaceFree(self.__theBoard, 5):
                 return 5
+            print("Apos Teste de Centro de tabuleiro")
         
             # Move on one of the sides.
-            return self.chooseRandomMoveFromList(self.theboard, [2, 4, 6, 8])
-    
+            return self.chooseRandomMoveFromList(self.__theboard, [2, 4, 6, 8])
+            print("Apos Teste de entre Corner")
 
-
-
-
-
-def main(addr="10.1.1.2",port=5000):
+def main(addr="127.0.0.1",port=5000):
 	#Cria um servidor XML-RPC no endereço e port definido.
 	server = SimpleXMLRPCServer((addr,port))
 	#Permite aos clientes fazer introspecção ao servidor
@@ -251,63 +191,12 @@ def main(addr="10.1.1.2",port=5000):
 	#Permite aos clientes fazerem vários pedidos como um só
 	server.register_multicall_functions()
 	#Regista um objecto Session, o mapeamento dos métodos é automático
-	server.register_instance(Session())
 	server.register_instance(Tictactoe())
 	#Regista a funcão currentTime no servidor com o nome time
 	server.register_function(currentTime,"time")
 	#Regista a funcão drawBoard no servidor com o nome draw
 	#Inicia o servidor XML-RCP em loop infinito
 	server.serve_forever()
-
-        # ESTA PARTE DO CODIGO NAO RODA  
-        print('Welcome to Tic Tac Toe!')
-
-        while True:
-            # Reset the board
-            theBoard = [' '] * 10
-            playerLetter, computerLetter = inputPlayerLetter()
-            turn = whoGoesFirst()
-            print('The ' + turn + ' will go first.')
-            gameIsPlaying = True
-
-            while gameIsPlaying:
-                if turn == 'player':
-                    # Player's turn.
-                    drawBoard(theBoard)
-                    move = getPlayerMove(theBoard)
-                    makeMove(theBoard, playerLetter, move)
-        
-                    if isWinner(theBoard, playerLetter):
-                        drawBoard(theBoard)
-                        print('Hooray! You have won the game!')
-                        gameIsPlaying = False
-                    else:
-                        if isBoardFull(theBoard):
-                            drawBoard(theBoard)
-                            print('The game is a tie!')
-                            break
-                        else:
-                            turn = 'computer'
-        
-                else:
-                    # Computer's turn.
-                    move = getComputerMove(theBoard, computerLetter)
-                    makeMove(theBoard, computerLetter, move)
-        
-                    if isWinner(theBoard, computerLetter):
-                        drawBoard(theBoard)
-                        print('The computer has beaten you! You lose.')
-                        gameIsPlaying = False
-                    else:
-                        if isBoardFull(theBoard):
-                            drawBoard(theBoard)
-                            print('The game is a tie!')
-                            break
-                        else:
-                            turn = 'player'
-
-            if not playAgain():
-                break
 
 if __name__ == "__main__":
 	main()
