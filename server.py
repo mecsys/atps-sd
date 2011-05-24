@@ -150,14 +150,12 @@ class Tictactoe (object):
         
             # Here is our algorithm for our Tic Tac Toe AI:
             # First, check if we can win in the next move
-            print("Desntro de ComputerMove()")
             for i in range(1, 10):
                 copy = self.getBoardCopy()
                 if self.isSpaceFree(copy, i):
                     self.makeTestMove(copy, self.computerLetter, i)
                     if self.isTestWinner(copy, self.computerLetter):
                         return i
-            print("Apos Teste se Computer ganhou")
             
             # Check if the player could win on his next move, and block them.
             for i in range(1, 10):
@@ -166,22 +164,18 @@ class Tictactoe (object):
                     self.makeTestMove(copy, self.playerLetter, i)
                     if self.isTestWinner(copy, self.playerLetter):
                         return i
-            print("Apos Teste se Cliente ganhou")
         
             # Try to take one of the corners, if they are free.
             move = self.chooseRandomMoveFromList(self.__theBoard, [1, 3, 7, 9])
             if move != None:
                 return move
-            print("Apos Teste de Corner")
         
             # Try to take the center, if it is free.
             if self.isSpaceFree(self.__theBoard, 5):
                 return 5
-            print("Apos Teste de Centro de tabuleiro")
         
             # Move on one of the sides.
             return self.chooseRandomMoveFromList(self.__theboard, [2, 4, 6, 8])
-            print("Apos Teste de entre Corner")
 
 def main(addr="127.0.0.1",port=5000):
 	#Cria um servidor XML-RPC no endereço e port definido.

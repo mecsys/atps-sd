@@ -2,35 +2,8 @@
 import xmlrpclib
 from datetime import datetime
 
-#Cria uma ligação ao servidor XML-RCP
+# Cria uma ligacao ao servidor XML-RPC
 server = xmlrpclib.ServerProxy("http://127.0.0.1:5000/")
-
-def pedidoSimples(board):
-	#Pede ao servidor que execute o procedimento time
-	print server.time()
-	#Pede ao servidor que liste todos os procedimentos disponíveis
-	print server.system.listMethods()
-	#Retorna o pydoc associado ao método
-	print server.system.methodHelp("time")
-	#Envia os dados para o método junto com o pedido
-	print server.register("magician","123")
-	print server.login("magician","123")
-	print server.logout("magician")
-
-def pedidoMultiCall():
-	#Gera um pedido MultiCall
-	multirequest = xmlrpclib.MultiCall(server)
-	#Adiciona ao pedido multi call os pedidos pretendidos
-	multirequest.time()
-	multirequest.register("magician","123")
-	multirequest.login("magician","123")
-	#Faz o pedido e aguarda a resposta que é um gerador
-	result = multirequest()
-	#Um a um extrai os dados da resposta do gerador
-	for resp in result:
-		print resp
-
-
 
 # Tic Tac Toe
 
@@ -85,9 +58,10 @@ def makeMove(letter, move):
     try:
         server.makeMove(letter, move)
     except xmlrpclib.Fault, err:
-        print "Uma falha ocorreu"
-        print "Falha erro: %d" % err.faultCode
-        print "Falha string: %s" % err.faultString
+#        print "Uma falha ocorreu"
+#        print "Falha erro: %d" % err.faultCode
+#        print "Falha string: %s" % err.faultString
+        pass
 
 def isWinner(le):
     # Given a board and a player's letter, this function returns True if that player has won.
@@ -147,7 +121,6 @@ def main():
 	    countc = 0
 	    countu = 0
 	    theBoard = []
-	    print server.system.listMethods()
 	    theBoard = server.getBoard()
             playerLetter, computerLetter = inputPlayerLetter()
             turn = server.whoGoesFirst()
