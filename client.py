@@ -3,7 +3,7 @@ import xmlrpclib
 from datetime import datetime
 
 #Cria uma ligação ao servidor XML-RCP
-server = xmlrpclib.ServerProxy("http://10.1.1.2:5000/")
+server = xmlrpclib.ServerProxy("http://127.0.0.1:5000/")
 
 def pedidoSimples(board):
 	#Pede ao servidor que execute o procedimento time
@@ -132,7 +132,7 @@ def chooseRandomMoveFromList(board, movesList):
 
 def getComputerMove():
     # Given a board and the computer's letter, determine where to move and return that move.
-    server.getComputerMove()
+    return server.getComputerMove()
 
 
 def isBoardFull():
@@ -179,11 +179,10 @@ def main():
                    # Computer's turn.
 		   countc = countc + 1
     		   print('Entrando em Computer\'s Turn', countc)
-		   turn = 'player'
-                   move = getComputerMove(computerLetter)
+                   move = getComputerMove()
                    makeMove(computerLetter, move)
         
-                   if isWinner(theBoard, computerLetter):
+                   if isWinner(computerLetter):
                        drawBoard()
                        print('The computer has beaten you! You lose.')
                        gameIsPlaying = False
