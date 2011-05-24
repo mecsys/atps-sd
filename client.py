@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 import xmlrpclib
 from datetime import datetime
@@ -118,8 +119,6 @@ def main():
         
         while True:
             # Reset the board
-	    countc = 0
-	    countu = 0
 	    theBoard = []
 	    theBoard = server.getBoard()
             playerLetter, computerLetter = inputPlayerLetter()
@@ -130,8 +129,6 @@ def main():
             while gameIsPlaying:
                 if turn == 'player':
                     # Player's turn.
-		    countu = countu + 1
-    		    print('Entrando em User\'s Turn', countu)
                     drawBoard()
                     move = getPlayerMove()
                     makeMove(playerLetter, move)
@@ -150,8 +147,6 @@ def main():
         
                 else:
                    # Computer's turn.
-		   countc = countc + 1
-    		   print('Entrando em Computer\'s Turn', countc)
                    move = getComputerMove()
                    makeMove(computerLetter, move)
         

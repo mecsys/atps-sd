@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from time import strftime
