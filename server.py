@@ -4,15 +4,6 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from time import strftime
 import random
 
-def currentTime():
-	"""
-	Permite obter a data e hora actual do servidor.
-	Args: None
-	Return: String com Data e hora
-	Formato da Resposta: YYYY-mm-DD HH:MM:SS
-	"""
-	return strftime("%Y-%m-%d %H:%M:%S")
-
 # Tic Tac Toe
 class Tictactoe (object):
 	"""
@@ -30,26 +21,24 @@ class Tictactoe (object):
                 self.playerLetter = " "
                 self.computer = " "
                 self.turn = " "
+                Tictactoe.playerWin = 0
+                Tictactoe.computerWin = 0
                 print "Tic Tac Toe - Classe instanciada."
 
         def drawBoard(self):             
                 """
-                Retarna o tabuleiro para o cliente mostrar 
+                Retorna o tabuleiro para o cliente printar
                 na tela.
+                A lista theBoard contem 10 unidades (ignoramos indice 0).
                 """
-                # This function prints out the board that it was passed.
-
-                # "board" is a list of 10 strings representing the board (ignore index 0)
                 return self.__theBoard
 
         def setPlayersLetter(self, letter):
                 """
-                O jogador escolha com qual letra jogar.
+                O jogador escolhe com qual letra jogar, e retorna
+                uma lista com a letra do jogador como primeiro item,
+                e como segundo item a letra do computador.
                 """
-                # Let's the player type which letter they want to be.
-                # Returns a list with the player's letter as the first item, and the computer's letter as the second.
-
-                # the first element in the tuple is the player's letter, the second is the computer's letter.
                 if letter == 'X':
                         self.playerLetter, self.computerLetter = ['X', 'O']
                         return self.playerLetter, self.computerLetter
@@ -58,7 +47,9 @@ class Tictactoe (object):
                         return self.playerLetter, self.computerLetter
 
         def whoGoesFirst(self):
-                # Randomly choose the player who goes first.
+                """
+                Escolha aleatoriamente quem comeca primeiro.
+                """
                 if random.randint(0, 1) == 0:
                         self.turn = 'computer'
                         return self.turn
@@ -67,118 +58,168 @@ class Tictactoe (object):
                         return self.turn
 
 	def createBoard(self):
+                """
+                Cria um tabuleiro (lista), e a retorna.
+                """
 		self.Board = [' '] * 10
 	        return self.Board 
 
 	def getBoard(self):
+                """
+                Retorna o tabuleiro (lista) principal que fica
+                armazenado no servidor.
+                """
 		return self.__theBoard
 
 	def makeMove(self,letter, move):
+                """
+                Executa o movimento dos jogadores na tabuleiro (lista)
+                principal, que fica armazenado no servidor.
+                """
 		self.__theBoard[move] = letter
 
 	def makeTestMove(self, board, letter, move):
+                """
+                Executa o movimento dos jogadores em uma copia do 
+                tabuleiro (lista) principal, que fica armazenado no servidor.
+                Metodo para funcionamento da IA (Inteligencia Artificial)
+                que o servidor executa para atacar e se defender.
+                """
 		board[move] = letter
 
         def isWinner(self, le):
-            # Given a board and a player's letter, this function returns True if that player has won.
-            # We use bo instead of board and le instead of letter so we don't have to type as much.
+                """
+                Checa em todas a 8 possibilidades de vitorio se algum jogador
+                ganhou o jogo e retorna positivo (True) se sim, e nao (None)
+                do contrario.
+                """
 
-            bo = self.__theBoard
+                # Aponta (bo) para o tabuleiro (lista) principal.
+                bo = self.__theBoard
 
-            return ((bo[7] == le and bo[8] == le and bo[9] == le) or # across the top
-            (bo[4] == le and bo[5] == le and bo[6] == le) or # across the middle
-            (bo[1] == le and bo[2] == le and bo[3] == le) or # across the bottom
-            (bo[7] == le and bo[4] == le and bo[1] == le) or # down the left side
-            (bo[8] == le and bo[5] == le and bo[2] == le) or # down the middle
-            (bo[9] == le and bo[6] == le and bo[3] == le) or # down the right side
-            (bo[7] == le and bo[5] == le and bo[3] == le) or # diagonal
-            (bo[9] == le and bo[5] == le and bo[1] == le)) # diagonal
+                return ((bo[7] == le and bo[8] == le and bo[9] == le) or # across the top
+                (bo[4] == le and bo[5] == le and bo[6] == le) or # across the middle
+                (bo[1] == le and bo[2] == le and bo[3] == le) or # across the bottom
+                (bo[7] == le and bo[4] == le and bo[1] == le) or # down the left side
+                (bo[8] == le and bo[5] == le and bo[2] == le) or # down the middle
+                (bo[9] == le and bo[6] == le and bo[3] == le) or # down the right side
+                (bo[7] == le and bo[5] == le and bo[3] == le) or # diagonal
+                (bo[9] == le and bo[5] == le and bo[1] == le)) # diagonal
 
         def isTestWinner(self, bo, le):
-            # Given a board and a player's letter, this function returns True if that player has won.
-            # We use bo instead of board and le instead of letter so we don't have to type as much.
-            return ((bo[7] == le and bo[8] == le and bo[9] == le) or # across the top
-            (bo[4] == le and bo[5] == le and bo[6] == le) or # across the middle
-            (bo[1] == le and bo[2] == le and bo[3] == le) or # across the bottom
-            (bo[7] == le and bo[4] == le and bo[1] == le) or # down the left side
-            (bo[8] == le and bo[5] == le and bo[2] == le) or # down the middle
-            (bo[9] == le and bo[6] == le and bo[3] == le) or # down the right side
-            (bo[7] == le and bo[5] == le and bo[3] == le) or # diagonal
-            (bo[9] == le and bo[5] == le and bo[1] == le)) # diagonal
+                """
+                Utiliza uma copia (bo) do tabuleiro (lista) principal, que esta
+                armazenado no servidor, para checar todas a 8 possibilidades
+                de vitoria. Se algum jogador ganhou o jogo retorna 
+                positivo (True) e nao (None) do contrario.
+                """
+                return ((bo[7] == le and bo[8] == le and bo[9] == le) or # across the top
+                (bo[4] == le and bo[5] == le and bo[6] == le) or # across the middle
+                (bo[1] == le and bo[2] == le and bo[3] == le) or # across the bottom
+                (bo[7] == le and bo[4] == le and bo[1] == le) or # down the left side
+                (bo[8] == le and bo[5] == le and bo[2] == le) or # down the middle
+                (bo[9] == le and bo[6] == le and bo[3] == le) or # down the right side
+                (bo[7] == le and bo[5] == le and bo[3] == le) or # diagonal
+                (bo[9] == le and bo[5] == le and bo[1] == le)) # diagonal
 
         def isBoardFull(self):
-            # Return True if every space on the board has been taken. Otherwise return False.
+                """
+                Checa se tabuleiro (lista) esta cheio. Indice de 1 ao 9, 
+                indice 0 é ignorado.
+                Retorna verdade (True) se ha algun espaco em branco no
+                tabuleiro (lista).
+                """
+                board = self.__theBoard
 
-            board = self.__theBoard
-
-            for i in range(1, 10):
-                if self.isSpaceFree(board, i):
-                    return False
-            return True
+                for i in range(1, 10):
+                        if self.isSpaceFree(board, i):
+                                return False
+                return True
 
         def isSpaceFree(self, board, move):
-            # Return true if the passed move is free on the passed board.
-            return board[move] == ' '
+                """
+                Retorna verdade (True) se o movimento passado estiver livre
+                no tabuleiro (lista) passado.
+                """
+                return board[move] == ' '
     
         def resetGame(self):
-            self.__theBoard = self.createBoard()
-            return True
+                """
+                Reinicia o tabuleiro (lista) para iniciar um novo jogo.
+                """
+                self.__theBoard = self.createBoard()
+                return True
 
         def getBoardCopy(self):
-            # Make a duplicate of the board list and return it the duplicate.
-            dupeBoard = []
+                """
+                Faz uma copia do tabuleiro (lista) e a retorna.
+                """
+                dupeBoard = []
         
-            for i in self.__theBoard:
-                dupeBoard.append(i)
+                for i in self.__theBoard:
+                        dupeBoard.append(i)
         
-            return dupeBoard
+                return dupeBoard
 
         def chooseRandomMoveFromList(self, board, movesList):
-            # Returns a valid move from the passed list on the passed board.
-            # Returns None if there is no valid move.
-            possibleMoves = []
-            for i in movesList:
-                if self.isSpaceFree(board, i):
-                    possibleMoves.append(i)
+                """
+                Retorna um movimento valido para o tabuleiro passado (lista).
+                Retorna nao (None) se houver movimento valido.
+                """
+                possibleMoves = []
+                for i in movesList:
+                        if self.isSpaceFree(board, i):
+                                possibleMoves.append(i)
         
-            if len(possibleMoves) != 0:
-                return random.choice(possibleMoves)
-            else:
-                return None
+                if len(possibleMoves) != 0:
+                        return random.choice(possibleMoves)
+                else:
+                        return None
 
         def getComputerMove(self):
-            # Given a board and the computer's letter, determine where to move and return that move.
+                """
+                Determina onde o computador devera jogar.
+                Utiliza um simples algoritmo de IA (Inteligencia Artificial)
+                para escolher o melhor movimento, tanto no ataque,
+                quanto na defesa.
+                """
         
-            # Here is our algorithm for our Tic Tac Toe AI:
-            # First, check if we can win in the next move
-            for i in range(1, 10):
-                copy = self.getBoardCopy()
-                if self.isSpaceFree(copy, i):
-                    self.makeTestMove(copy, self.computerLetter, i)
-                    if self.isTestWinner(copy, self.computerLetter):
-                        return i
+                # Aqui esta o algoritmo para nosso jogo da Velha AI:
+                # Primeiro, checa se pode ganhar no proximo movimento, e vence. 
+                for i in range(1, 10):
+                        copy = self.getBoardCopy()
+                        if self.isSpaceFree(copy, i):
+                                self.makeTestMove(copy, self.computerLetter, i)
+                                if self.isTestWinner(copy, self.computerLetter):
+                                        return i
             
-            # Check if the player could win on his next move, and block them.
-            for i in range(1, 10):
-                copy = self.getBoardCopy()
-                if self.isSpaceFree(copy, i):
-                    self.makeTestMove(copy, self.playerLetter, i)
-                    if self.isTestWinner(copy, self.playerLetter):
-                        return i
+                # Checa se o jogador podera ganhar no seu proximo movimento, e
+                # bloqueia ele.
+                for i in range(1, 10):
+                        copy = self.getBoardCopy()
+                        if self.isSpaceFree(copy, i):
+                                self.makeTestMove(copy, self.playerLetter, i)
+                                if self.isTestWinner(copy, self.playerLetter):
+                                        return i
         
-            # Try to take one of the corners, if they are free.
-            move = self.chooseRandomMoveFromList(self.__theBoard, [1, 3, 7, 9])
-            if move != None:
-                return move
+                # Tenta obter um dos cantos, se estiverem livres.
+                move = self.chooseRandomMoveFromList(self.__theBoard, [1, 3, 7, 9])
+                if move != None:
+                        return move
         
-            # Try to take the center, if it is free.
-            if self.isSpaceFree(self.__theBoard, 5):
-                return 5
+                # Tenta obter o centro, se estiver livre.
+                if self.isSpaceFree(self.__theBoard, 5):
+                        return 5
         
-            # Move on one of the sides.
-            return self.chooseRandomMoveFromList(self.__theboard, [2, 4, 6, 8])
+                # Move em um dos lados.
+                return self.chooseRandomMoveFromList(self.__theboard, [2, 4, 6, 8])
 
 def main(addr="127.0.0.1",port=5000):
+        """
+        Funcao pricipal do modulo Servidor. Inicializa o 
+        XML-RPC, habilita a interacao do cliente e registra 
+        o objeto jogo da Velha, para que o cliente possa invoca-lo.
+        """
 	#Cria um servidor XML-RPC no endereço e port definido.
 	server = SimpleXMLRPCServer((addr,port))
 	#Permite aos clientes fazer introspecção ao servidor
@@ -187,9 +228,6 @@ def main(addr="127.0.0.1",port=5000):
 	server.register_multicall_functions()
 	#Regista um objecto Session, o mapeamento dos métodos é automático
 	server.register_instance(Tictactoe())
-	#Regista a funcão currentTime no servidor com o nome time
-	server.register_function(currentTime,"time")
-	#Regista a funcão drawBoard no servidor com o nome draw
 	#Inicia o servidor XML-RCP em loop infinito
 	server.serve_forever()
 
