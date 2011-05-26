@@ -36,7 +36,7 @@ def inputPlayerLetter():
     # Returns a list with the player's letter as the first item, and the computer's letter as the second.
     letter = ''
     while not (letter == 'X' or letter == 'O'):
-        print('Do you want to be X or O?')
+        print('Voce Deseja Ser X ou O?')
         letter = raw_input().upper()
 
     # the first element in the tuple is the player's letter, the second is the computer's letter.
@@ -50,8 +50,8 @@ def playAgain():
     # This function returns True if the player wants to play again, otherwise it returns False.
     drawBoard()
     server.resetGame()
-    print('Do you want to play again? (yes or no)')
-    return raw_input().lower().startswith('y')
+    print('Voce Deseja Jogar Novamente? (sim ou nao)')
+    return raw_input().lower().startswith('s')
 
 def makeMove(letter, move):
     #board[move] = letter
@@ -92,7 +92,7 @@ def getPlayerMove():
     board = server.drawBoard()
 
     while move not in '1 2 3 4 5 6 7 8 9'.split() or not isSpaceFree(board, int(move)):
-        print('What is your next move? (1-9)')
+        print('Qual seu proximo movimento? (1-9)')
         move = raw_input()
     return int(move)
 
@@ -119,15 +119,15 @@ def isBoardFull():
     return server.isBoardFull()
 
 def main():
-        print('Welcome to Tic Tac Toe!')
-        
+        print('Bem-Vindo Ao Jogo Da Velha!')
+        print("") 
         while True:
             # Reset the board
 	    theBoard = []
 	    theBoard = server.getBoard()
             playerLetter, computerLetter = inputPlayerLetter()
             turn = server.whoGoesFirst()
-            print('The ' + turn + ' will go first.')
+            print('O ' + turn + ' joga primeiro.')
             gameIsPlaying = True
         
             while gameIsPlaying:
@@ -141,12 +141,12 @@ def main():
         
                     if isWinner(playerLetter):
                         drawBoard()
-                        print('Hooray! You have won the game!')
+                        print('Muiti Bom! Voce Ganhou O Jogo!')
                         gameIsPlaying = False
                     else:
                         if isBoardFull():
                             drawBoard()
-                            print('The game is a tie!')
+                            print('O Jogo Empatou!')
                             break
                         else:
                             turn = 'computer'
@@ -158,12 +158,12 @@ def main():
         
                    if isWinner(computerLetter):
                        drawBoard()
-                       print('The computer has beaten you! You lose.')
+                       print('O Computador Bateu Voce! Voce Perdeu.')
                        gameIsPlaying = False
                    else:
                        if isBoardFull():
                           drawBoard()
-                          print('The game is a tie!')
+                          print('O Jogo Empatou!')
                           break
                        else:
                           turn = 'player'
