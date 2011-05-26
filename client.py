@@ -4,7 +4,8 @@ import xmlrpclib
 from datetime import datetime
 
 # Cria uma ligacao ao servidor XML-RPC
-server = xmlrpclib.ServerProxy("http://127.0.0.1:5000/")
+
+server = xmlrpclib.ServerProxy("http://127.0.0.1:5000/", allow_none=True)
 
 # Tic Tac Toe
 
@@ -12,19 +13,23 @@ def drawBoard():
     # This function prints out the board that it was passed.
 
     # "board" is a list of 10 strings representing the board (ignore index 0)
-    print('Printando o tabuleiro!')
-    board =  server.drawBoard()
-    print('   |   |')
-    print(' ' + board[7] + ' | ' + board[8] + ' | ' + board[9])
-    print('   |   |')
-    print('-----------')
-    print('   |   |')
-    print(' ' + board[4] + ' | ' + board[5] + ' | ' + board[6])
-    print('   |   |')
-    print('-----------')
-    print('   |   |')
-    print(' ' + board[1] + ' | ' + board[2] + ' | ' + board[3])
-    print('   |   |')
+    aux = int(server.getPartida())
+    if ( aux  == 3):
+        return
+    else:
+        print('Partida Nr %d' % (aux + 1))
+        board =  server.drawBoard()
+        print('   |   |')
+        print(' ' + board[7] + ' | ' + board[8] + ' | ' + board[9])
+        print('   |   |')
+        print('-----------')
+        print('   |   |')
+        print(' ' + board[4] + ' | ' + board[5] + ' | ' + board[6])
+        print('   |   |')
+        print('-----------')
+        print('   |   |')
+        print(' ' + board[1] + ' | ' + board[2] + ' | ' + board[3])
+        print('   |   |')
 
 def inputPlayerLetter():
     # Let's the player type which letter they want to be.
@@ -43,12 +48,10 @@ def whoGoesFirst():
 
 def playAgain():
     # This function returns True if the player wants to play again, otherwise it returns False.
+    drawBoard()
+    server.resetGame()
     print('Do you want to play again? (yes or no)')
-    check = raw_input().lower().startswith('y')
-
-    if check:
-        return server.resetGame()
-    
+    return raw_input().lower().startswith('y')
 
 def makeMove(letter, move):
     #board[move] = letter
@@ -67,7 +70,8 @@ def makeMove(letter, move):
 def isWinner(le):
     # Given a board and a player's letter, this function returns True if that player has won.
     # We use bo instead of board and le instead of letter so we don't have to type as much.
-    return server.isWinner(le)
+        aux = server.isWinner(le)
+        return aux
 
 def getBoardCopy(board):
     # Make a duplicate of the board list and return it the duplicate.
@@ -129,7 +133,9 @@ def main():
             while gameIsPlaying:
                 if turn == 'player':
                     # Player's turn.
+                    print("")
                     drawBoard()
+                    print(server.getMsg())
                     move = getPlayerMove()
                     makeMove(playerLetter, move)
         

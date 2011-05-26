@@ -21,8 +21,10 @@ class Tictactoe (object):
                 self.playerLetter = " "
                 self.computer = " "
                 self.turn = " "
-                Tictactoe.playerWin = 0
-                Tictactoe.computerWin = 0
+                self.playerWin = 0
+                self.computerWin = 0
+                self.partida = 0
+                self.msg = ""
                 print "Tic Tac Toe - Classe instanciada."
 
         def drawBoard(self):             
@@ -31,6 +33,9 @@ class Tictactoe (object):
                 na tela.
                 A lista theBoard contem 10 unidades (ignoramos indice 0).
                 """
+                print("self.partida = %d" % self.partida)
+                print("self.playerWin  = %d" % self.playerWin)
+                print("self.computerWin  = %d" % self.computerWin)
                 return self.__theBoard
 
         def setPlayersLetter(self, letter):
@@ -87,6 +92,12 @@ class Tictactoe (object):
                 """
 		board[move] = letter
 
+        def getPartida(self):
+                return self.partida
+
+        def getMsg(self):
+                return self.msg
+
         def isWinner(self, le):
                 """
                 Checa em todas a 8 possibilidades de vitorio se algum jogador
@@ -97,14 +108,63 @@ class Tictactoe (object):
                 # Aponta (bo) para o tabuleiro (lista) principal.
                 bo = self.__theBoard
 
-                return ((bo[7] == le and bo[8] == le and bo[9] == le) or # across the top
-                (bo[4] == le and bo[5] == le and bo[6] == le) or # across the middle
-                (bo[1] == le and bo[2] == le and bo[3] == le) or # across the bottom
-                (bo[7] == le and bo[4] == le and bo[1] == le) or # down the left side
-                (bo[8] == le and bo[5] == le and bo[2] == le) or # down the middle
-                (bo[9] == le and bo[6] == le and bo[3] == le) or # down the right side
-                (bo[7] == le and bo[5] == le and bo[3] == le) or # diagonal
-                (bo[9] == le and bo[5] == le and bo[1] == le)) # diagonal
+                if ((bo[7] == le and bo[8] == le and bo[9] == le) or
+                (bo[4] == le and bo[5] == le and bo[6] == le) or
+                (bo[1] == le and bo[2] == le and bo[3] == le) or
+                (bo[7] == le and bo[4] == le and bo[1] == le) or
+                (bo[8] == le and bo[5] == le and bo[2] == le) or
+                (bo[9] == le and bo[6] == le and bo[3] == le) or
+                (bo[7] == le and bo[5] == le and bo[3] == le) or
+                (bo[9] == le and bo[5] == le and bo[1] == le)):
+                        if self.playerLetter == le:
+                                print("Incrementou PLAYER WIN")
+                                self.playerWin = self.playerWin + 1
+                                print("Incrementou PARTIDA")
+                                self.partida = self.partida + 1
+                                self.msg = "Jogador Ganhou ultima rodada!"
+                                return self.gameOver(le)
+
+                        elif self.computerLetter == le:
+                                print("Incrementou COMPUTER WIN")
+                                self.computerWin = self.computerWin + 1
+                                print("Incrementou PARTIDA")
+                                self.partida = self.partida + 1
+                                self.msg = "Computador Ganhou ultima rodada!"
+                                return self.gameOver(le)
+                        print("Entrou em ISWINNER IF.")
+                        return True
+                else:
+                        print("Entrou em ISWINNER ELSE.")
+                        return False
+
+        
+        def gameOver(self, le):
+                print("Entrou em gameOver!")
+                if self.playerLetter == le:
+                        print("Entrou em gameOver PLAYER!")
+                        if self.playerWin == 2:
+                                return True
+                        elif self.partida == 3 and self.playerWin > self.computerWin:
+                                print("Entrou em gameOver IF PLAYER!")
+                                return True
+                        else:
+                                print("Entrou em gameOver ELSE PLAYER!")
+                                self.resetBoard()
+                                return False
+
+                elif self.computerLetter == le:
+                        print("Entrou em gameOver! COMPUTER")
+                        if self.computerWin == 2:
+                                return True
+                        elif self.partida  == 3 and self.computerWin > self.playerWin:
+                                print("Entrou em gameOver IF COMPUTER!")
+                                return True
+                        else:
+                                print("Entrou em gameOver ELSE COMPUTER!")
+                                self.resetBoard()
+                                return False
+
+                        
 
         def isTestWinner(self, bo, le):
                 """
@@ -147,8 +207,19 @@ class Tictactoe (object):
                 """
                 Reinicia o tabuleiro (lista) para iniciar um novo jogo.
                 """
+                print("ENTRANDO EM SERVER.RESETGAME!")
                 self.__theBoard = self.createBoard()
+                self.partida = 0
+                self.playerWin = 0
+                self.computerWin = 0
                 return True
+
+        def resetBoard(self):
+                """
+                Reinicia o tabuleiro (lista) para iniciar um novo jogo.
+                """
+                print("ENTRANDO EM SERVER.RESETBOARD!")
+                self.__theBoard = self.createBoard()
 
         def getBoardCopy(self):
                 """
